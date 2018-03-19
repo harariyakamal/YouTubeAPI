@@ -150,7 +150,7 @@ extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
             videoCell.titleLabel.text = _currentItem.title
             videoCell.descriptionLabel.text = _currentItem.listDescription
             videoCell.publishLabel.text = _currentItem.publishDateString.longFormatDateString()
-            
+            videoCell.cellDelegate = self
             NetworkManager.shared.downloadImage(fromUrl: _currentItem.imageUrlString, withHandler: { (data, error) in
                 if let _imageData = data {
                     DispatchQueue.main.async {
@@ -187,5 +187,16 @@ extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
             playerViewController.videoIdentifier = _videoId
         }
         self.navigationController?.pushViewController(playerViewController, animated: true)
+    }
+}
+
+extension VideoListViewController: VideoCellDelegate {
+    func videoCellActionButtonClicked(_ actionButton: UIButton) {
+        DispatchQueue.main.async {
+            let activityVC = UIActivityViewController(activityItems:["Not Implemented"], applicationActivities: nil)
+            activityVC.excludedActivityTypes = [.airDrop, .addToReadingList, .copyToPasteboard, .saveToCameraRoll, .print,.assignToContact, .copyToPasteboard]
+
+            self.present(activityVC, animated: true, completion: nil)
+        }
     }
 }

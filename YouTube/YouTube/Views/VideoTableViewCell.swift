@@ -8,7 +8,16 @@
 
 import UIKit
 
+protocol VideoCellDelegate: NSObjectProtocol {
+    func videoCellActionButtonClicked(_ actionButton: UIButton)
+}
+
 class VideoTableViewCell: UITableViewCell {
+    
+    /** A delegate. */
+    weak var cellDelegate: VideoCellDelegate?
+    
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupSubViews()
@@ -87,8 +96,13 @@ class VideoTableViewCell: UITableViewCell {
         addSubview(channelLabel)
         addSubview(descriptionLabel)
         
+        likeButton.addTarget(self, action: #selector(actionButtonClicked(_:)), for: .touchUpInside)
         footerView.addSubview(likeButton)
+        
+        commentButton.addTarget(self, action: #selector(actionButtonClicked(_:)), for: .touchUpInside)
         footerView.addSubview(commentButton)
+        
+        shareButton.addTarget(self, action: #selector(actionButtonClicked(_:)), for: .touchUpInside)
         footerView.addSubview(shareButton)
         
         addConstraintsWithFormat("H:|-8-[v0(210)]-4-[v1]-8-|", cellImageView, titleLabel)
@@ -107,5 +121,10 @@ class VideoTableViewCell: UITableViewCell {
         footerView.addConstraintsWithFormat("V:|-4-[v0]-4-|", likeButton)
         footerView.addConstraintsWithFormat("V:|-4-[v0]-4-|", commentButton)
         footerView.addConstraintsWithFormat("V:|-4-[v0]-4-|", shareButton)
+    }
+    
+    // Actions.
+    @objc func actionButtonClicked(_ sender: UIButton) {
+        cellDelegate?.videoCellActionButtonClicked(sender)
     }
 }
