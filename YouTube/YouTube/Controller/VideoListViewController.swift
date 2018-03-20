@@ -176,7 +176,7 @@ extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200.0
+        return 230.0
     }
     
     // MARK: - UITableViewDelegate

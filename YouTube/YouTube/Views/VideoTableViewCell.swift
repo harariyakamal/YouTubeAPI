@@ -87,6 +87,26 @@ class VideoTableViewCell: UITableViewCell {
         return _channelLabel
     }()
     
+    var likeLabel: UILabel = {
+        let _likeLabel = UILabel()
+        _likeLabel.textAlignment = .center
+        _likeLabel.text = "55 Likes"
+        _likeLabel.textColor = UIColor.subLineColor
+        _likeLabel.font = UIFont.boldSystemFont(ofSize: 12.0)
+        _likeLabel.backgroundColor = UIColor.clear
+        return _likeLabel
+    }()
+    
+    var commentLabel: UILabel = {
+        let _commentLabel = UILabel()
+        _commentLabel.textAlignment = .center
+        _commentLabel.text = "505 Comments"
+        _commentLabel.textColor = UIColor.subLineColor
+        _commentLabel.font = UIFont.boldSystemFont(ofSize: 12.0)
+        _commentLabel.backgroundColor = UIColor.clear
+        return _commentLabel
+    }()
+    
     // Subviews.
     private func setupSubViews() {
         addSubview(cellImageView)
@@ -95,11 +115,13 @@ class VideoTableViewCell: UITableViewCell {
         addSubview(publishLabel)
         addSubview(channelLabel)
         addSubview(descriptionLabel)
+        addSubview(likeLabel)
+        addSubview(commentLabel)
         
-        likeButton.addTarget(self, action: #selector(actionButtonClicked(_:)), for: .touchUpInside)
+        likeButton.addTarget(self, action: #selector(likeButtonClicked(_:)), for: .touchUpInside)
         footerView.addSubview(likeButton)
         
-        commentButton.addTarget(self, action: #selector(actionButtonClicked(_:)), for: .touchUpInside)
+        commentButton.addTarget(self, action: #selector(commentsButtonClicked(_:)), for: .touchUpInside)
         footerView.addSubview(commentButton)
         
         shareButton.addTarget(self, action: #selector(actionButtonClicked(_:)), for: .touchUpInside)
@@ -109,13 +131,15 @@ class VideoTableViewCell: UITableViewCell {
         addConstraintsWithFormat("H:|-8-[v0(210)]-4-[v1]-8-|", cellImageView, publishLabel)
         addConstraintsWithFormat("H:|-8-[v0(210)]-4-[v1]-8-|", cellImageView, descriptionLabel)
         
-        addConstraintsWithFormat("V:|-8-[v0(140)]", cellImageView)
+        addConstraintsWithFormat("V:|-8-[v0(140)]-4-[v1(26)]-4-[v2(40)]-8-|", cellImageView, likeLabel, footerView)
+        addConstraintsWithFormat("V:|-8-[v0(140)]-4-[v1(26)]-4-[v2(40)]-8-|", cellImageView, commentLabel, footerView)
+        
         addConstraintsWithFormat("V:|-8-[v0(44)]", titleLabel)
         addConstraintsWithFormat("V:|-8-[v0]-4-[v1(20)]-4-[v2(72)]", titleLabel, publishLabel, descriptionLabel)
         
         addConstraintsWithFormat("H:|-8-[v0]-8-|", footerView)
-        
-        addConstraintsWithFormat("V:|-8-[v0(140)]-4-[v1(40)]-8-|", cellImageView, footerView)
+            
+        addConstraintsWithFormat("H:|-8-[v0(v1)][v1]-8-|", likeLabel, commentLabel)
 
         footerView.addConstraintsWithFormat("H:|[v0(v2)][v1(v2)][v2]|", likeButton, commentButton, shareButton)
         footerView.addConstraintsWithFormat("V:|-4-[v0]-4-|", likeButton)
@@ -126,5 +150,45 @@ class VideoTableViewCell: UITableViewCell {
     // Actions.
     @objc func actionButtonClicked(_ sender: UIButton) {
         cellDelegate?.videoCellActionButtonClicked(sender)
+    }
+    
+    /// This is testing, get this data from server and use that.
+    @objc func likeButtonClicked(_ sender: UIButton) {
+        if let _text = likeLabel.text {
+            let numericSet = "0123456789"
+            let filteredCharacters = _text.filter { return numericSet.contains(String($0)) }
+            if var numb = Int(filteredCharacters) {
+                numb += 1
+                
+                UIView.transition(with: likeLabel, duration: 0.50, options: .transitionCrossDissolve, animations: {
+                    self.likeLabel.textColor = .red
+                    self.likeLabel.text = "\(numb) Likes"
+                }) { (completed) in
+                    if completed {
+                        self.likeLabel.textColor = UIColor.subLineColor
+                    }
+                }
+            }
+        }
+    }
+    
+    /// This is testing, get this data from server and use that.
+    @objc func commentsButtonClicked(_ sender: UIButton) {
+        if let _text = commentLabel.text {
+            let numericSet = "0123456789"
+            let filteredCharacters = _text.filter { return numericSet.contains(String($0)) }
+            if var numb = Int(filteredCharacters) {
+                numb += 1
+                
+                UIView.transition(with: commentLabel, duration: 0.50, options: .transitionCrossDissolve, animations: {
+                    self.commentLabel.textColor = .red
+                    self.commentLabel.text = "\(numb) Comments"
+                }) { (completed) in
+                    if completed {
+                        self.commentLabel.textColor = UIColor.subLineColor
+                    }
+                }
+            }
+        }
     }
 }
